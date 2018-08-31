@@ -42,6 +42,7 @@ type Port struct {
 	Enabled bool `xml:"enabled,attr" json:"@enabled"`
 }
 type InstanceInfo struct {
+	InstanceId                    string          `xml:"instanceId" json:"instanceId"`
 	HostName                      string            `xml:"hostName" json:"hostName"`
 	HomePageUrl                   string            `xml:"homePageUrl,omitempty" json:"homePageUrl,omitempty"`
 	StatusPageUrl                 string            `xml:"statusPageUrl" json:"statusPageUrl"`
@@ -113,6 +114,7 @@ func NewInstanceInfo(hostName, app, ip string, port int, ttl uint, isSsl bool) *
 		EvictionDurationInSecs: ttl,
 	}
 	instanceInfo := &InstanceInfo{
+		InstanceId:     fmt.Sprintf("%s:%s:%d", hostName, app, port),
 		HostName:       hostName,
 		App:            app,
 		IpAddr:         ip,
@@ -140,7 +142,8 @@ func NewInstanceInfo(hostName, app, ip string, port int, ttl uint, isSsl bool) *
 			Enabled: true,
 		}
 	}
-	instanceInfo.StatusPageUrl = protocol + "://" + hostName + stringPort + "/info"
+	instanceInfo.StatusPageUrl = protocol + "://" + hostName + stringPort  //+ "/info"
+	instanceInfo.HealthCheckUrl = protocol + "://" + hostName + stringPort //+ "/health"
 	return instanceInfo
 }
 
