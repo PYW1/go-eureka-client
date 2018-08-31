@@ -3,6 +3,7 @@ package eureka
 import (
 	"encoding/json"
 	"strings"
+	"fmt"
 )
 
 func (c *Client) RegisterInstance(appId string, instanceInfo *InstanceInfo) error {
@@ -16,6 +17,9 @@ func (c *Client) RegisterInstance(appId string, instanceInfo *InstanceInfo) erro
 		return err
 	}
 
-	_, err = c.Post(path, body)
+	resp, err := c.Post(path, body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("Server response error: %d", resp.StatusCode)
+	}
 	return err
 }
