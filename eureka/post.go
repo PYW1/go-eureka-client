@@ -18,6 +18,12 @@ func (c *Client) RegisterInstance(appId string, instanceInfo *InstanceInfo) erro
 	}
 
 	resp, err := c.Post(path, body)
+	if err != nil {
+		return err
+	}
+	if resp == nil {
+		return fmt.Errorf("eureka respose is nil")
+	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("Server response error: %d", resp.StatusCode)
 	}
